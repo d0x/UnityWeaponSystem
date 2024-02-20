@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3365381380669659240
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1174747016533738587, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433672565246329318, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2086160155
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433672565246329318, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 747301811
+      objectReference: {fileID: 0}
+    - target: {fileID: 6459213215540159056, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: spawnProjectile
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6459213215540159056, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 1951976267978780147, guid: 1ef7cae8c738c8a4da80c528474d9e61, type: 3}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698465772540214917, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9194726038070980758, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: m_Name
+      value: Invisible Hand
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
