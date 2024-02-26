@@ -1,4 +1,5 @@
 using System;
+using ParrelSync;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -34,7 +35,12 @@ public class NetworkController : MonoBehaviour {
     private void Start() {
         if (autoConnect) {
 #if UNITY_EDITOR
-            StartHost();
+            if (ClonesManager.IsClone()) {
+                StartClient();
+            }
+            else {
+                StartHost();
+            }
 #else
             StartClient();
 #endif
