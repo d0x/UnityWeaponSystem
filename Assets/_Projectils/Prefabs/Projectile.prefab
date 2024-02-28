@@ -40,9 +40,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 454671970074917177}
+  - component: {fileID: -8798337046684441317}
   - component: {fileID: -802863004957683879}
   - component: {fileID: 622482031491240189}
   - component: {fileID: 6688043545210583349}
+  - component: {fileID: 3414110424231283737}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -66,6 +68,27 @@ Transform:
   - {fileID: 4055277254861445102}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8798337046684441317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3043245756
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &-802863004957683879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +140,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45c616101ec54b34db3a3c98f536d2e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnExplosion: 1
+  applyForces: 1
   explosionRadius: 5
   explosionForce: 10
   upwardsModifier: 5
+--- !u!114 &3414110424231283737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84fabe6d064a77945b02ead9cebc3e5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -20,26 +19,34 @@ public class PlayerController : NetworkBehaviour {
     }
 
     public override void OnNetworkSpawn() {
-        FollowTargetsCameraManager.INSTANCE.targets.Add(transform);
-        TurnManager.INSTANCE.addPlayerController(this);
-        TurnManager.INSTANCE.turn.OnValueChanged += TurnManager_TurnChanged;
-        WeaponUiController.INSTANCE.addPlayerController(this);
-
         var clientId = (int)NetworkObject.OwnerClientId;
+        bodyRenderer.material.color = colors[clientId];
 
-        if (IsOwner) {
-            var spawnPoint = SpawnManager.INSTANCE.GetSpawnPoint(clientId);
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-
-            equip(defaultWeapon);
+        if (IsServer) {
+            TurnManager.INSTANCE.addPlayerController(this);
         }
 
-        bodyRenderer.material.color = colors[clientId];
+        TurnManager.INSTANCE.turn.OnValueChanged += (_, _) => TurnManager_TurnChanged();
+        TurnManager_TurnChanged();
+
+        if (!IsOwner) {
+            enabled = false;
+            return;
+        }
+
+        WeaponUiController.INSTANCE.addPlayerController(this);
+
+        var spawnPoint = SpawnManager.INSTANCE.GetSpawnPoint(clientId);
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+
+        equip(defaultWeapon, false);
     }
 
-    private void TurnManager_TurnChanged(ulong previousValue, ulong newValue) {
-        var isPlayerObjectsTurn = OwnerClientId == newValue;
+    private void TurnManager_TurnChanged() {
+        var isPlayerObjectsTurn = TurnManager.INSTANCE.isLocalPlayersTurn();
+
+        enabled = isPlayerObjectsTurn;
 
         if (isPlayerObjectsTurn) {
             playerWeaponController.startTurn();
@@ -50,8 +57,6 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void Update() {
-        if (!IsOwner || !TurnManager.INSTANCE.isLocalPlayersTurn()) return;
-
         handleMovement();
         handleRotation();
         handleWeapon();
@@ -92,8 +97,6 @@ public class PlayerController : NetworkBehaviour {
     }
 
     private void handleWeapon() {
-        if (!IsOwner) return;
-
         if (Input.GetKeyDown(KeyCode.Space)) {
             fire();
         }
@@ -109,8 +112,8 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    public void equip(WeaponType weaponType) {
-        if (!TurnManager.INSTANCE.isLocalPlayersTurn()) return;
+    public void equip(WeaponType weaponType, bool checkCurrentTurn = true) {
+        if (checkCurrentTurn && !TurnManager.INSTANCE.isLocalPlayersTurn()) return;
 
         playerWeaponController.equip(weaponType);
         WeaponUiController.INSTANCE.updateCurrentWeapon(weaponType);

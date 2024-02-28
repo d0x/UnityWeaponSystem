@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 4052134268871282338}
   - component: {fileID: 3395713357375919042}
   - component: {fileID: -2500833373047380443}
+  - component: {fileID: 3818499460144766286}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -96,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2523745695
+  GlobalObjectIdHash: 3801062958
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -132,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3006751bcddd4f40a7dc145a1ce9758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultWeapon: 0
+  defaultWeapon: 1
   speed: 5
   rotationSpeed: 100
   weaponAnchor: {fileID: 4572310937019070039}
@@ -278,6 +279,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3818499460144766286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5799532012153384421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84fabe6d064a77945b02ead9cebc3e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9145983870073318659

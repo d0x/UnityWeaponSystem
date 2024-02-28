@@ -390,7 +390,7 @@ MonoBehaviour:
   status: {fileID: 2063944734}
   hostButton: {fileID: 1517382655}
   clientButton: {fileID: 747133558}
-  autoConnect: 0
+  autoConnect: 1
 --- !u!1 &144534902
 GameObject:
   m_ObjectHideFlags: 0
