@@ -11,6 +11,8 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField] private PlayerWeaponController playerWeaponController;
     [SerializeField] private List<Color> colors;
 
+    private NetworkVariable<float> weaponRotation = new(writePerm: NetworkVariableWritePermission.Owner);
+
     public Renderer bodyRenderer;
     private Rigidbody rb;
 
@@ -22,7 +24,8 @@ public class PlayerController : NetworkBehaviour {
         var clientId = (int)NetworkObject.OwnerClientId;
         bodyRenderer.material.color = colors[clientId];
         NetworkUtils.ReplaceCloneWithClientId(NetworkObject);
-
+        weaponRotation.OnValueChanged += (_, _) => rotateWeaponAnchor();
+        
         if (IsServer) {
             TurnManager.INSTANCE.addPlayerController(this);
         }
@@ -42,6 +45,11 @@ public class PlayerController : NetworkBehaviour {
         transform.rotation = spawnPoint.rotation;
 
         equip(defaultWeapon, false);
+    }
+
+    private void rotateWeaponAnchor() {
+        var degrees = weaponRotation.Value;
+        weaponAnchor.localRotation = Quaternion.Euler(degrees, 0, 0);
     }
 
     private void TurnManager_TurnChanged() {
@@ -87,9 +95,7 @@ public class PlayerController : NetworkBehaviour {
 
     private void handleRotation() {
         if (!isSpecialKeyDown()) return;
-
-        var weaponRotation = Input.GetAxis("Vertical");
-        weaponAnchor.Rotate(Vector3.right, weaponRotation * -rotationSpeed * Time.deltaTime);
+        weaponRotation.Value = weaponRotation.Value += Input.GetAxis("Vertical") * -rotationSpeed * Time.deltaTime;
     }
 
     private bool isSpecialKeyDown() {
