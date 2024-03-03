@@ -21,6 +21,7 @@ public class PlayerController : NetworkBehaviour {
     public override void OnNetworkSpawn() {
         var clientId = (int)NetworkObject.OwnerClientId;
         bodyRenderer.material.color = colors[clientId];
+        NetworkUtils.ReplaceCloneWithClientId(NetworkObject);
 
         if (IsServer) {
             TurnManager.INSTANCE.addPlayerController(this);
