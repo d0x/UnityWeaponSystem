@@ -9,6 +9,7 @@ public class ExplosionManager : MonoBehaviour {
 
     private void Awake() {
         INSTANCE = this;
+        Application.quitting += OnApplicationQuitting;
     }
 
     void Update() {
@@ -37,6 +38,14 @@ public class ExplosionManager : MonoBehaviour {
         explosionController.transitionRenderer = explosion.GetComponent<Renderer>();
 
         explosionController.StartCoroutine(explosionController.ScaleAndDestroy(explosion));
+    }
+
+    private void OnApplicationQuitting() {
+        if (explosions.Count > 0) {
+            Debug.Log($"Removed {explosions.Count} explosions beacuse the application is quitting.");
+        }
+
+        explosions.Clear();
     }
 }
 
