@@ -66,6 +66,8 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void Update() {
+        if (!IsOwner) return;
+        
         handleMovement();
         handleRotation();
         handleWeapon();
