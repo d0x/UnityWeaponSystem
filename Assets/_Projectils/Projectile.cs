@@ -1,8 +1,16 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 // TODO Should be NetworkBehaviour
 public class Projectile : MonoBehaviour {
+    public Action ExplodeEvent;
+
+    public void blowUp() {
+        ExplodeEvent?.Invoke();
+        Destroy(gameObject);
+    }
+
     [ServerRpc]
     public void activateServerRpc() {
         activateClientRpc();
@@ -10,6 +18,6 @@ public class Projectile : MonoBehaviour {
 
     [ClientRpc]
     private void activateClientRpc() {
-        Destroy(gameObject, 3f);
+        Invoke(nameof(blowUp), 3f);
     }
 }

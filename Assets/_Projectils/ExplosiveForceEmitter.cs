@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(ExplodeOnCollision))]
 public class ExplosiveForceEmitter : MonoBehaviour {
     [SerializeField] private Boolean spawnExplosion = true;
     [SerializeField] private Boolean applyForces = true;
@@ -10,7 +11,11 @@ public class ExplosiveForceEmitter : MonoBehaviour {
     public float explosionForce = 10f;
     public float upwardsModifier = 5f;
 
-    private void OnDestroy() {
+    public void Awake() {
+        GetComponent<Projectile>().ExplodeEvent += explode;
+    }
+
+    public void explode() {
         if (applyForces) {
             ApplyForces();
         }

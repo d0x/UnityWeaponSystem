@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class DestroyOnCollision : MonoBehaviour {
-    // becomes true after 200ms
-    // used that cluster parts don't collide with each-other
+
+public class ExplodeOnCollision : MonoBehaviour {
+
     private bool canDestroy = false;
+
 
     private void Start() {
         StartCoroutine(EnableDestroy());
@@ -17,7 +18,7 @@ public class DestroyOnCollision : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.name != gameObject.name && canDestroy) {
-            Destroy(gameObject);
+            GetComponent<Projectile>().blowUp();
         }
     }
 }
