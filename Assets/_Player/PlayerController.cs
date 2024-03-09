@@ -23,7 +23,6 @@ public class PlayerController : NetworkBehaviour {
     public override void OnNetworkSpawn() {
         var clientId = (int)NetworkObject.OwnerClientId;
         bodyRenderer.material.color = colors[clientId];
-        NetworkUtils.ReplaceCloneWithClientId(NetworkObject);
         weaponRotation.OnValueChanged += (_, _) => rotateWeaponAnchor();
         
         if (IsServer) {
