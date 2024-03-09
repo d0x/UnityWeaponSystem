@@ -100,7 +100,7 @@ public class PlayerWeaponController : NetworkBehaviour {
             projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor);
         }
 
-        projectile.transform.SetParent(null);
+        // projectile.transform.SetParent(null);
 
         var projectileRb = projectile.GetComponent<Rigidbody>();
         projectileRb.isKinematic = false;
