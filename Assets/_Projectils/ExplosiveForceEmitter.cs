@@ -21,7 +21,7 @@ public class ExplosiveForceEmitter : MonoBehaviour {
         }
 
         if (spawnExplosion) {
-            ExplosionManager.INSTANCE.addExplosion(transform.position);
+            ExplosionManager.INSTANCE.spawnExplosion(transform.position);
         }
     }
 

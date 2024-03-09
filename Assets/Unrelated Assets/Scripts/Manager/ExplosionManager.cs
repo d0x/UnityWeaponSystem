@@ -5,31 +5,15 @@ using UnityEngine;
 public class ExplosionManager : MonoBehaviour {
     public static ExplosionManager INSTANCE;
 
-    private HashSet<Vector3> explosions = new();
-
     private void Awake() {
         INSTANCE = this;
-        Application.quitting += OnApplicationQuitting;
     }
-
-    void Update() {
-        var explosionsCopy = new HashSet<Vector3>(explosions);
-        explosions.Clear();
-
-        foreach (var explosion in explosionsCopy) {
-            spawnExplosion(explosion);
-        }
-    }
-
-    public void addExplosion(Vector3 t) {
-        explosions.Add(t);
-    }
-
-    void spawnExplosion(Vector3 t) {
+    
+    public void spawnExplosion(Vector3 position) {
         var explosion = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         Destroy(explosion.GetComponent<SphereCollider>());
 
-        explosion.transform.position = t;
+        explosion.transform.position = position;
         explosion.transform.localScale = new Vector3(2, 2, 2);
 
         var explosionController = explosion.AddComponent<ExplosionController>();
@@ -38,14 +22,6 @@ public class ExplosionManager : MonoBehaviour {
         explosionController.transitionRenderer = explosion.GetComponent<Renderer>();
 
         explosionController.StartCoroutine(explosionController.ScaleAndDestroy(explosion));
-    }
-
-    private void OnApplicationQuitting() {
-        if (explosions.Count > 0) {
-            Debug.Log($"Removed {explosions.Count} explosions beacuse the application is quitting.");
-        }
-
-        explosions.Clear();
     }
 }
 
