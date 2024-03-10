@@ -1,14 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
 
-public class ExplodeOnCollision : MonoBehaviour {
-
+public class ExplodeOnCollision : NetworkBehaviour {
     private bool canDestroy = false;
 
-
     private void Start() {
-        StartCoroutine(EnableDestroy());
+        if (IsOwner)
+            StartCoroutine(EnableDestroy());
+        else
+            enabled = false;
     }
 
     IEnumerator EnableDestroy() {
@@ -17,7 +19,7 @@ public class ExplodeOnCollision : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.name != gameObject.name && canDestroy) {
+        if (canDestroy && collision.gameObject.name != gameObject.name) {
             GetComponent<Projectile>().blowUp();
         }
     }

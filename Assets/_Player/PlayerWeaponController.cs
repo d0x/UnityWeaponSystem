@@ -1,28 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerWeaponController : NetworkBehaviour {
-    [SerializeField] private Weapon bazooka;
-    [SerializeField] private Weapon grenade;
-    [SerializeField] private Weapon rifle;
+    public PlayerController playerController;
+    public Weapon bazookaPrefab;
+    public Weapon grenadePrefab;
+    public Weapon riflePrefab;
 
     private NetworkVariable<WeaponType> activeWeaponEnum = new(writePerm: NetworkVariableWritePermission.Owner);
-    private List<Weapon> weapons = new();
+    public Weapon activeWeapon;
 
-    private Weapon activeWeapon;
+
+    private static Dictionary<ulong, PlayerWeaponController> controllers = new();
 
     private void Awake() {
-        weapons.Add(bazooka);
-        weapons.Add(grenade);
-        weapons.Add(rifle);
+        Debug.Log($"{GetType().logName()} [CID:{OwnerClientId}]: Awake");
 
-        activeWeaponEnum.OnValueChanged += (_, _) => { enableActiveWeaponOnly(); };
+        activeWeaponEnum.OnValueChanged += (_, _) => { spawnActiveWeapon(); };
+    }
+
+    public static PlayerWeaponController getInstance(ulong ownerClientId) {
+        if (controllers.ContainsKey(ownerClientId)) {
+            return controllers[ownerClientId];
+        }
+
+        var controller = FindObjectsByType<PlayerWeaponController>(FindObjectsSortMode.InstanceID)
+            .First(it => it.NetworkObject.OwnerClientId == ownerClientId);
+        controllers[ownerClientId] = controller;
+        return controller;
     }
 
     public override void OnNetworkSpawn() {
-        enableActiveWeaponOnly();
+        Debug.Log($"{GetType().logName()} [CID:{OwnerClientId}]: OnNetworkSpawn");
+
+        controllers[OwnerClientId] = this;
+        spawnActiveWeapon();
+    }
+
+    public override void OnNetworkDespawn() {
+        controllers.Remove(OwnerClientId);
     }
 
     #region API For PlayerController
@@ -49,37 +68,38 @@ public class PlayerWeaponController : NetworkBehaviour {
 
     #endregion
 
-    private void enableActiveWeaponOnly() {
-        // deactivate all weapons
-        foreach (var weapon in weapons) {
-            weapon.gameObject.SetActive(false);
+    private void spawnActiveWeapon() {
+        if (activeWeapon != null) {
+            activeWeapon.despawnAndDestroy();
         }
 
         var activeWeaponValue = activeWeaponEnum.Value;
 
-        activeWeapon = activeWeaponValue switch {
+        var prefab = activeWeaponValue switch {
             WeaponType.NONE => null,
-            WeaponType.BAZOOKA => bazooka,
-            WeaponType.GRENADE => grenade,
-            WeaponType.RIFLE => rifle,
+            WeaponType.BAZOOKA => bazookaPrefab,
+            WeaponType.GRENADE => grenadePrefab,
+            WeaponType.RIFLE => riflePrefab,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (activeWeapon == null) {
-            Debug.Log($"[CID:{OwnerClientId}] No active weapon.");
-            return;
+        if (IsServer && prefab != null) {
+            var weapon = Instantiate(
+                prefab,
+                playerController.weaponAnchor.position,
+                playerController.weaponAnchor.rotation);
+
+            weapon.NetworkObject.SpawnWithOwnership(NetworkObject.OwnerClientId);
+
+            spawnAndAttachProjectileIfNeeded(weapon);
         }
-
-        activeWeapon.gameObject.SetActive(true);
-
-        spawnAndAttachProjectileIfNeeded(activeWeapon);
-
-        Debug.Log($"[CID:{OwnerClientId}] {activeWeaponValue} is now active.");
     }
 
     private void spawnAndAttachProjectileIfNeeded(Weapon weapon) {
-        if (weapon.spawnProjectile && weapon.attachedProjectile == null) {
-            weapon.attachedProjectile = Instantiate(weapon.projectilePrefab, weapon.projectileAnchor);
+        if (IsServer && weapon.spawnProjectile && weapon.attachedProjectile == null) {
+            var projectile = Instantiate(weapon.projectilePrefab, weapon.projectileAnchor);
+            projectile.NetworkObject.SpawnWithOwnership(NetworkObject.OwnerClientId);
+            projectile.AttachToWeaponClientRpc(weapon.NetworkObject);
         }
     }
 
@@ -87,27 +107,6 @@ public class PlayerWeaponController : NetworkBehaviour {
     private void fireServerRpc() {
         if (activeWeapon == null) return;
 
-        fireClientRpc();
-    }
-
-    [ClientRpc]
-    private void fireClientRpc() {
-        if (activeWeapon == null) return;
-
-        var projectile = activeWeapon.attachedProjectile;
-
-        if (projectile == null) {
-            projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor);
-        }
-
-        // projectile.transform.SetParent(null);
-
-        var projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.isKinematic = false;
-        projectileRb.useGravity = true;
-        projectileRb.AddForce(projectile.transform.forward * 500);
-
-        activeWeapon.attachedProjectile = null;
-        projectile.activateServerRpc();
+        activeWeapon.fireClientRpc();
     }
 }

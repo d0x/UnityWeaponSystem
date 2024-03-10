@@ -7,7 +7,7 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField] private WeaponType defaultWeapon = WeaponType.NONE;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 100.0f;
-    [SerializeField] private Transform weaponAnchor;
+    [SerializeField] public Transform weaponAnchor;
     [SerializeField] private PlayerWeaponController playerWeaponController;
     [SerializeField] private List<Color> colors;
 
@@ -17,10 +17,14 @@ public class PlayerController : NetworkBehaviour {
     private Rigidbody rb;
 
     void Awake() {
+        Debug.Log($"{GetType().logName()} [CID:{OwnerClientId}]: Awake");
+        
         rb = GetComponent<Rigidbody>();
     }
 
     public override void OnNetworkSpawn() {
+        Debug.Log($"{GetType().logName()} [CID:{OwnerClientId}]: OnNetworkSpawn");
+        
         var clientId = (int)NetworkObject.OwnerClientId;
         bodyRenderer.material.color = colors[clientId];
         weaponRotation.OnValueChanged += (_, _) => rotateWeaponAnchor();

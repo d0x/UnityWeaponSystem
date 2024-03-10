@@ -8,9 +8,10 @@ public class ClusterPartSpawner : MonoBehaviour {
 
     private void Start() {
         rb = GetComponent<Rigidbody>();
+        GetComponent<Projectile>().ExplodeEvent += spawnClusters;
     }
 
-    private void OnDestroy() {
+    private void spawnClusters() {
         spawnClusters(clusterCount, transform.position, clusterPartPrefab);
     }
 
