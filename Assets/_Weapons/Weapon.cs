@@ -56,15 +56,41 @@ public class Weapon : NetworkBehaviour {
 
     [ClientRpc]
     public void fireClientRpc() {
-        var projectile = attachedProjectile;
-        attachedProjectile = null;
+        if (attachedProjectile != null) {
+            attachedProjectile.fireLocal();
+            attachedProjectile = null;
+        }
+        else {
+            Debug.Log($"{GetType().logName()} [CID:{OwnerClientId}]: No Projectile found!");
+        }
+    }
 
-        if (projectile == null) {
+    public void fireServer() {
+        if (attachedProjectile == null) {
             Debug.Log($"{GetType().logName()}: No Projectile");
-            // TODO: Spawn it.
-            return;
+            var projectile = Instantiate(projectilePrefab, projectileAnchor);
+            projectile.NetworkObject.SpawnWithOwnership(OwnerClientId);
+            attachProjectileClientRpc(projectile.NetworkObject);
         }
 
-        projectile.fireLocal();
+        fireClientRpc();
+    }
+
+    public void spawnAndAttachProjectileIfNeeded() {
+        if (IsServer && spawnProjectile && attachedProjectile == null) {
+            var projectile = Instantiate(projectilePrefab, projectileAnchor);
+            projectile.NetworkObject.SpawnWithOwnership(OwnerClientId);
+
+            attachProjectileClientRpc(projectile.NetworkObject);
+        }
+    }
+
+    [ClientRpc]
+    private void attachProjectileClientRpc(NetworkObjectReference projectileNor) {
+        projectileNor.TryGet(out var networkObject);
+        var projectile = networkObject.GetComponent<Projectile>();
+
+        projectile.GetComponent<FollowTransform>().followTarget = projectileAnchor;
+        attachedProjectile = projectile;
     }
 }

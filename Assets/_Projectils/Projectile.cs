@@ -52,15 +52,6 @@ public class Projectile : NetworkBehaviour {
         Invoke(nameof(blowUp), 3f);
     }
 
-    [ClientRpc]
-    public void AttachToWeaponClientRpc(NetworkObjectReference weaponNetworkObject) {
-        weaponNetworkObject.TryGet(out var networkObject);
-        var weapon = networkObject.GetComponent<Weapon>();
-
-        followTransform.followTarget = weapon.projectileAnchor;
-        weapon.attachedProjectile = this;
-    }
-
     public void despawnAndDestroy() {
         if (!IsServer) return;
         Debug.Log($"{GetType().logName()}: DespawnAndDestroy");

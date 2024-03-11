@@ -91,22 +91,13 @@ public class PlayerWeaponController : NetworkBehaviour {
 
             weapon.NetworkObject.SpawnWithOwnership(NetworkObject.OwnerClientId);
 
-            spawnAndAttachProjectileIfNeeded(weapon);
-        }
-    }
-
-    private void spawnAndAttachProjectileIfNeeded(Weapon weapon) {
-        if (IsServer && weapon.spawnProjectile && weapon.attachedProjectile == null) {
-            var projectile = Instantiate(weapon.projectilePrefab, weapon.projectileAnchor);
-            projectile.NetworkObject.SpawnWithOwnership(NetworkObject.OwnerClientId);
-            projectile.AttachToWeaponClientRpc(weapon.NetworkObject);
+            weapon.spawnAndAttachProjectileIfNeeded();
         }
     }
 
     [ServerRpc]
     private void fireServerRpc() {
         if (activeWeapon == null) return;
-
-        activeWeapon.fireClientRpc();
+        activeWeapon.fireServer();
     }
 }
