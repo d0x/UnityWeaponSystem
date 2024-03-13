@@ -32,3 +32,12 @@ But if it is his turn, he should not have any delay and be the source of truth.
 # Other Information
 * All unrelated stuff is grouped in [Unrelated Assets](Assets%2FUnrelated%20Assets).
 * The [NetworkController.cs](Assets%2FUnrelated%20Assets%2FScripts%2FNetworkController.cs) has an `Auto Connect`-Option. If this is ticked, running in Play mode will start a host immediatly and running a `Build and Run` will connect a client.
+
+# Different bombs I already discovered
+- 💣 If a client spawns a projectile through a `ServerRpc`, this call has no `return` value to attach it to a weapon. (fix: `ClientRpc` with `NetworkObjectRef` after `SpawnWithOwnership` which is super slow).
+- 💣 Instantiate all weapons and projectiles in advance to deactivate them isn't that easy because you need to sync `enable`/`disable` state.
+- 💣 Removing the parent from a projectile from its weapon can only be done by the server. (fix: Remove it in advance and [FollowTransform.cs](Assets%2FUnrelated%20Assets%2FScripts%2FollowTransform.cs))
+
+# Open Questions / Missing knowledge
+- ❓How does the Network Rigidbody work and what are its limitations?
+- ❓Is NGO Tick-based?
