@@ -1,5 +1,7 @@
 using System;
+#if UNITY_EDITOR
 using ParrelSync;
+#endif
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
