@@ -1,13 +1,7 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class OwnerFollowTransform : NetworkBehaviour {
+public class FollowTransform : MonoBehaviour {
     public Transform followTarget;
-
-    public override void OnNetworkSpawn() {
-        if (!IsOwner)
-            enabled = false;
-    }
 
     private void Update() {
         if (followTarget != null) {
