@@ -1,5 +1,4 @@
 using System;
-using Unity.Netcode;
 using UnityEngine;
 
 // TODO Should be NetworkBehaviour
@@ -11,13 +10,7 @@ public class Projectile : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    [ServerRpc]
-    public void activateServerRpc() {
-        activateClientRpc();
-    }
-
-    [ClientRpc]
-    private void activateClientRpc() {
+    public void activateExplosionTimer() {
         Invoke(nameof(blowUp), 3f);
     }
 }

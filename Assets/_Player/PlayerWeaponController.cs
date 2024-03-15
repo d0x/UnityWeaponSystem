@@ -108,6 +108,6 @@ public class PlayerWeaponController : NetworkBehaviour {
         projectileRb.AddForce(projectile.transform.forward * 500);
 
         activeWeapon.attachedProjectile = null;
-        projectile.activateServerRpc();
+        projectile.activateExplosionTimer();
     }
 }
