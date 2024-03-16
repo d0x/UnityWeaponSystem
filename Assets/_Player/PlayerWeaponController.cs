@@ -12,6 +12,7 @@ public class PlayerWeaponController : NetworkBehaviour {
     private List<Weapon> weapons = new();
 
     private Weapon activeWeapon;
+    private Projectile activeProjectile;
 
     private void Awake() {
         weapons.Add(bazooka);
@@ -24,8 +25,6 @@ public class PlayerWeaponController : NetworkBehaviour {
     public override void OnNetworkSpawn() {
         enableActiveWeaponOnly();
     }
-
-    #region API For PlayerController
 
     // In case you need to transfer ownership or smth, you can do it here
     public void startTurn() {
@@ -44,10 +43,53 @@ public class PlayerWeaponController : NetworkBehaviour {
 
     // Tells the player to fire its current weapon
     public void fire() {
-        fireServerRpc();
+        simulateFireServerRpc();
+        performFire();
     }
 
-    #endregion
+    private int bulletCount = 0;
+
+    private void performFire() {
+        Debug.Log($"{GetType().logName()}: Fire! {bulletCount++}");
+
+        if (activeWeapon == null) return;
+
+        var projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor.position,
+            activeWeapon.projectileAnchor.rotation);
+        ProjectileManager.INSTANCE.mange(projectile);
+
+        var projectileRb = projectile.GetComponent<Rigidbody>();
+        projectileRb.isKinematic = false;
+        projectileRb.useGravity = true;
+        projectileRb.AddForce(projectile.transform.forward * 500);
+
+        projectile.activateOwner();
+    }
+
+    [ServerRpc]
+    private void simulateFireServerRpc() {
+        simulateFireClientRpc();
+    }
+
+    [ClientRpc]
+    private void simulateFireClientRpc() {
+        if (IsOwner) return;
+
+        Debug.Log($"{GetType().logName()}: Fire! {bulletCount++}");
+
+        if (activeWeapon == null) return;
+
+        var projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor.position,
+            activeWeapon.projectileAnchor.rotation);
+        ProjectileManager.INSTANCE.mange(projectile);
+
+        var projectileRb = projectile.GetComponent<Rigidbody>();
+        projectileRb.isKinematic = false;
+        projectileRb.useGravity = true;
+        projectileRb.AddForce(projectile.transform.forward * 500);
+
+        projectile.activateDummy();
+    }
 
     private void enableActiveWeaponOnly() {
         // deactivate all weapons
@@ -72,42 +114,14 @@ public class PlayerWeaponController : NetworkBehaviour {
 
         activeWeapon.gameObject.SetActive(true);
 
-        spawnAndAttachProjectileIfNeeded(activeWeapon);
+        // spawnAndAttachProjectileIfNeeded(activeWeapon);
 
         Debug.Log($"[CID:{OwnerClientId}] {activeWeaponValue} is now active.");
     }
 
-    private void spawnAndAttachProjectileIfNeeded(Weapon weapon) {
-        if (weapon.spawnProjectile && weapon.attachedProjectile == null) {
-            weapon.attachedProjectile = Instantiate(weapon.projectilePrefab, weapon.projectileAnchor);
-        }
-    }
-
-    [ServerRpc]
-    private void fireServerRpc() {
-        if (activeWeapon == null) return;
-
-        fireClientRpc();
-    }
-
-    [ClientRpc]
-    private void fireClientRpc() {
-        if (activeWeapon == null) return;
-
-        var projectile = activeWeapon.attachedProjectile;
-
-        if (projectile == null) {
-            projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor);
-        }
-
-        // projectile.transform.SetParent(null);
-
-        var projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.isKinematic = false;
-        projectileRb.useGravity = true;
-        projectileRb.AddForce(projectile.transform.forward * 500);
-
-        activeWeapon.attachedProjectile = null;
-        projectile.activateExplosionTimer();
-    }
+    // private void spawnAndAttachProjectileIfNeeded(Weapon weapon) {
+    //     if (weapon.spawnProjectile && weapon.attachedProjectile == null) {
+    //         weapon.attachedProjectile = Instantiate(weapon.projectilePrefab, weapon.projectileAnchor);
+    //     }
+    // }
 }

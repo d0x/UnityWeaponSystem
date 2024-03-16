@@ -10,12 +10,8 @@ public class ExplosiveForceEmitter : MonoBehaviour {
     public float explosionRadius = 5f;
     public float explosionForce = 10f;
     public float upwardsModifier = 5f;
-
-    public void Awake() {
-        GetComponent<Projectile>().ExplodeEvent += explode;
-    }
-
-    public void explode() {
+    
+    public void blowUp() {
         if (applyForces) {
             ApplyForces();
         }

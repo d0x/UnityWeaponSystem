@@ -33,7 +33,7 @@ public class ClusterPartSpawner : MonoBehaviour {
             rb.useGravity = true;
             rb.AddForce(finalDirection * clusterForce + this.rb.velocity, ForceMode.Impulse);
             angle += angleStep;
-            cluster.activateExplosionTimer();
+            //cluster.activateExplosionTimer();
         }
     }
 }

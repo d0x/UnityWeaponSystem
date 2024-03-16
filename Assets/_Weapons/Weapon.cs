@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 
 
-// TODO Should be NetworkBehaviour 
 public class Weapon : MonoBehaviour {
     /**
      * true if projectiles should be spawned when the weapon
@@ -12,11 +11,4 @@ public class Weapon : MonoBehaviour {
 
     public Projectile projectilePrefab;
     public Transform projectileAnchor;
-
-    /**
-     * The currently projectile of the weapon.
-     * It can be null (like on a rifle where the bullet is spawned
-     * on demand)
-     */
-    public Projectile attachedProjectile;
 }
