@@ -16,18 +16,19 @@ public class PlayerController : NetworkBehaviour {
     public Renderer bodyRenderer;
     private Rigidbody rb;
 
+    // because we juggle with ownerships, we need to store the original OwnerClientId
+    // this PlayerController was associated with.
+    private ulong playerClientId;
+
     void Awake() {
         rb = GetComponent<Rigidbody>();
     }
 
     public override void OnNetworkSpawn() {
-        var clientId = (int)NetworkObject.OwnerClientId;
-        bodyRenderer.material.color = colors[clientId];
+        var clientId = NetworkObject.OwnerClientId;
+        playerClientId = clientId;
+        bodyRenderer.material.color = colors[(int)clientId];
         weaponRotation.OnValueChanged += (_, _) => rotateWeaponAnchor();
-        
-        if (IsServer) {
-            TurnManager.INSTANCE.addPlayerController(this);
-        }
 
         TurnManager.INSTANCE.turn.OnValueChanged += (_, _) => TurnManager_TurnChanged();
         TurnManager_TurnChanged();
@@ -39,7 +40,7 @@ public class PlayerController : NetworkBehaviour {
 
         WeaponUiController.INSTANCE.addPlayerController(this);
 
-        var spawnPoint = SpawnManager.INSTANCE.GetSpawnPoint(clientId);
+        var spawnPoint = SpawnManager.INSTANCE.GetSpawnPoint((int)clientId);
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
 
@@ -52,8 +53,9 @@ public class PlayerController : NetworkBehaviour {
     }
 
     private void TurnManager_TurnChanged() {
-        var isPlayerObjectsTurn = TurnManager.INSTANCE.isLocalPlayersTurn();
-
+        var isPlayerObjectsTurn = TurnManager.INSTANCE.turn.Value == playerClientId &&
+                                  TurnManager.INSTANCE.turn.Value == NetworkManager.LocalClientId;
+        
         enabled = isPlayerObjectsTurn;
 
         if (isPlayerObjectsTurn) {
@@ -65,8 +67,6 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void Update() {
-        if (!IsOwner) return;
-        
         handleMovement();
         handleRotation();
         handleWeapon();
