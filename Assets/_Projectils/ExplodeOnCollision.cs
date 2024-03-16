@@ -6,8 +6,7 @@ public class ExplodeOnCollision : MonoBehaviour {
 
     private bool canDestroy = false;
 
-
-    private void Start() {
+    public void activate() {
         StartCoroutine(EnableDestroy());
     }
 
