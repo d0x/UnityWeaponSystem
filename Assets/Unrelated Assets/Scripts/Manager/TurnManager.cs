@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using Unity.Netcode;
+using UnityEngine;
 
 public class TurnManager : NetworkBehaviour {
     public static TurnManager INSTANCE;
@@ -7,8 +8,6 @@ public class TurnManager : NetworkBehaviour {
     // Current active Network Client Id
     public NetworkVariable<ulong> turn = new();
     private int turnIndex = 0;
-
-    private List<PlayerController> players = new();
 
     private void Awake() {
         INSTANCE = this;
@@ -22,14 +21,22 @@ public class TurnManager : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     public void nextTurnServerRpc() {
+        var players = NetworkManager.Singleton.ConnectedClientsList.Select(client => client.ClientId).ToList();
         if (players.Count == 0) return;
 
         turnIndex = (turnIndex + 1) % players.Count;
-        turn.Value = players[turnIndex].OwnerClientId;
+        turn.Value = players[turnIndex];
+
+        transferOwnership(turn.Value);
     }
 
-    public void addPlayerController(PlayerController playerController) {
-        players.Add(playerController);
+    private void transferOwnership(ulong activeClientId) {
+        if (!IsServer) return;
+
+        FindObjectsByType<NetworkObject>(FindObjectsSortMode.None)
+            .Where(n => n.IsSpawned)
+            .ToList()
+            .ForEach(o => o.ChangeOwnership(activeClientId));
     }
 
     public void endTurn() {
