@@ -71,6 +71,10 @@ public class ProjectileManager : NetworkBehaviour {
         projectile.gameObject.SetActive(false);
     }
 
+    public void returnToPool(int projectileId) {
+        returnToPool(getProjectile(projectileId));
+    }
+
     public void blowUp(Projectile projectile) {
         performBlowUp(projectile);
         simulateBlowUpServerRpc(projectile.id);
@@ -91,18 +95,18 @@ public class ProjectileManager : NetworkBehaviour {
     private void simulateBlowUpClientRpc(int projectileId) {
         if (TurnManager.INSTANCE.isLocalPlayersTurn()) return;
 
-        var projectile = releaseProjectileFromPool(projectileId);
+        var projectile = getProjectile(projectileId);
 
         ExplosionManager.INSTANCE.spawnExplosion(projectile.transform.position);
         returnToPool(projectile);
     }
 
-    public Projectile releaseProjectileFromPool(int projectileId) {
+    public Projectile getProjectile(int projectileId) {
         return projectileById[projectileId];
     }
 
     public Projectile releaseFromPool(int projectileId) {
-        return release(releaseProjectileFromPool(projectileId));
+        return release(getProjectile(projectileId));
     }
 
     private Projectile release(Projectile projectile) {
