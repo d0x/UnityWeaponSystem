@@ -20,7 +20,6 @@ public class PlayerWeaponController : NetworkBehaviour {
     [SerializeField] private Weapon grenade;
     [SerializeField] private Weapon rifle;
 
-
     private NetworkVariable<WeaponInfo> activeWeaponInfo = new(
         writePerm: NetworkVariableWritePermission.Owner,
         value: WEAPON_NONE
@@ -51,14 +50,14 @@ public class PlayerWeaponController : NetworkBehaviour {
             activeProjectile = null;
         }
         else {
-            activeProjectile = ProjectileManager.INSTANCE.releaseFromPool(newvalue.projectileId);
+            activeProjectile = ProjectilePool.INSTANCE.release(newvalue.projectileId);
             activeProjectile.followTransform.followTarget = activeWeapon.projectileAnchor;
         }
     }
 
     public void equip(WeaponType weapon) {
         if (weapon == activeWeaponInfo.Value.type) {
-            Debug.Log($"{GetType().logName()}: weapon {weapon} already equiped.");
+            Debug.Log($"{GetType().logName()}: weapon {weapon} already equipped.");
             return;
         }
 
@@ -73,7 +72,7 @@ public class PlayerWeaponController : NetworkBehaviour {
 
         var projectileId = -1;
         if (activeWeapon.spawnProjectile) {
-            var projectile = ProjectileManager.INSTANCE.releaseProjectileFromPool(weaponType);
+            var projectile = ProjectilePool.INSTANCE.release(weaponType);
             projectile.followTransform.followTarget = activeWeapon.projectileAnchor;
             projectileId = projectile.id;
         }
@@ -98,7 +97,7 @@ public class PlayerWeaponController : NetworkBehaviour {
         getWeapon(weaponInfo.type).gameObject.SetActive(false);
         var projectileId = weaponInfo.projectileId;
         if (projectileId != -1) {
-            ProjectileManager.INSTANCE.returnToPool(projectileId);
+            ProjectilePool.INSTANCE.returnToPool(projectileId);
         }
     }
 
@@ -108,13 +107,11 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     private Projectile performFire() {
-        Debug.Log($"{GetType().logName()}: PerformFire");
-
         var projectile = activeProjectile;
         activeProjectile = null;
 
         if (projectile == null) {
-            projectile = ProjectileManager.INSTANCE.releaseProjectileFromPool(activeWeaponInfo.Value.type);
+            projectile = ProjectilePool.INSTANCE.release(activeWeaponInfo.Value.type);
         }
 
         projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
@@ -131,9 +128,9 @@ public class PlayerWeaponController : NetworkBehaviour {
     [ClientRpc]
     private void simulateFireClientRpc(int projectileId) {
         if (IsOwner) return;
-        Debug.Log($"{GetType().logName()}: SimulateFire");
+        
         activeProjectile = null;
-        var projectile = ProjectileManager.INSTANCE.releaseFromPool(projectileId);
+        var projectile = ProjectilePool.INSTANCE.release(projectileId);
 
         projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
 
