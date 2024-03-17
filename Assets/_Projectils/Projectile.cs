@@ -68,6 +68,7 @@ public class Projectile : MonoBehaviour {
     }
 
     public void fly(Vector3 position, Quaternion rotation) {
+        followTransform.followTarget = null;
         transform.position = position;
         transform.rotation = rotation;
 
