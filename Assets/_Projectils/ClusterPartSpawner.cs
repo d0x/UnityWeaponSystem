@@ -11,7 +11,7 @@ public class ClusterPartSpawner : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        spawnClusters(clusterCount, transform.position, clusterPartPrefab);
+      //  spawnClusters(clusterCount, transform.position, clusterPartPrefab);
     }
 
     public void spawnClusters(int numberOfClusters, Vector3 position, Projectile projectile) {

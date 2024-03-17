@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6688043545210583349}
   - component: {fileID: 3414110424231283737}
   - component: {fileID: 5532726991153006341}
+  - component: {fileID: 4040292371701289265}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -80,6 +81,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e18941433d65d4dbc143bf795c56b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
+  explosiveForceEmitter: {fileID: 0}
+  clusterPartSpawner: {fileID: 0}
+  explodeOnCollision: {fileID: 0}
+  followTransform: {fileID: 0}
+  selfDestructTime: 3
+  useGravity: 1
+  force: 500
+  id: 0
 --- !u!54 &622482031491240189
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -106,7 +116,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!114 &6688043545210583349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,3 +158,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f2b8e5d40b3d4486c43048181e041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayAfterActivation: 0.2
+--- !u!114 &4040292371701289265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c02beda12f45426f976199e97c6d01bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followTarget: {fileID: 0}

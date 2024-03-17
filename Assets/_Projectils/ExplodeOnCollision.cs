@@ -1,23 +1,31 @@
 using UnityEngine;
-using System.Collections;
-
 
 public class ExplodeOnCollision : MonoBehaviour {
+    private static readonly float NEVER = float.MaxValue;
 
-    private bool canDestroy = false;
+    [Tooltip("Delay after activation to prevent immediate explosion. Helps in scenarios like cluster grenades.")]
+    [SerializeField]
+    private float delayAfterActivation = .2f;
 
-    public void activate() {
-        StartCoroutine(EnableDestroy());
+    private Projectile projectile;
+    private float destroyAfterTime = NEVER;
+
+    void Awake() {
+        projectile = GetComponent<Projectile>();
     }
 
-    IEnumerator EnableDestroy() {
-        yield return new WaitForSeconds(0.2f);
-        canDestroy = true;
+    public void activate() {
+        destroyAfterTime = Time.time + delayAfterActivation;
+    }
+
+    public void reset() {
+        destroyAfterTime = NEVER;
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.name != gameObject.name && canDestroy) {
-            GetComponent<Projectile>().blowUp();
+        if (enabled && collision.gameObject.name != gameObject.name && Time.time >= destroyAfterTime) {
+            reset();
+            projectile.blowUp();
         }
     }
 }

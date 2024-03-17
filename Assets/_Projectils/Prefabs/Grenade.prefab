@@ -204,6 +204,14 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1801155530
       objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: selfDestructTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 454671970074917177, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -267,6 +275,10 @@ PrefabInstance:
     - target: {fileID: 5532726991153006341, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5532726991153006341, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: explodeOnCollision
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5772374168787587773, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_Name

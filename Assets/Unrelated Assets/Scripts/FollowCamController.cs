@@ -1,11 +1,11 @@
 using UnityEngine;
 
 public class FollowCamController : MonoBehaviour {
-    private void Start() {
+    private void OnEnable() {
         FollowTargetsCameraManager.INSTANCE.targets.Add(transform);
     }
 
-    private void OnDestroy() {
+    private void OnDisable() {
         FollowTargetsCameraManager.INSTANCE.targets.Remove(transform);
     }
 }

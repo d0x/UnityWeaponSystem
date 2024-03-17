@@ -57,13 +57,6 @@ public class PlayerController : NetworkBehaviour {
                                   TurnManager.INSTANCE.turn.Value == NetworkManager.LocalClientId;
         
         enabled = isPlayerObjectsTurn;
-
-        if (isPlayerObjectsTurn) {
-            playerWeaponController.startTurn();
-        }
-        else {
-            playerWeaponController.endTurn();
-        }
     }
 
     void Update() {
