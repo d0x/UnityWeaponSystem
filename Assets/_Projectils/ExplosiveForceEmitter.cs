@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(ExplodeOnCollision))]
 public class ExplosiveForceEmitter : MonoBehaviour {
     [SerializeField] private Boolean spawnExplosion = true;
     [SerializeField] private Boolean applyForces = true;

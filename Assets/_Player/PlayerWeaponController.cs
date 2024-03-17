@@ -26,67 +26,36 @@ public class PlayerWeaponController : NetworkBehaviour {
         enableActiveWeaponOnly();
     }
 
-    // In case you need to transfer ownership or smth, you can do it here
-    public void startTurn() {
-        Debug.Log($"[CID:{OwnerClientId}] starts turn");
-    }
-
-    // In case you need to transfer ownership or smth, you can do it here
-    public void endTurn() {
-        Debug.Log($"[CID:{OwnerClientId}] ends turn");
-    }
-
-    // Tells the player to change its current weapon
     public void equip(WeaponType weapon) {
         activeWeaponEnum.Value = weapon;
     }
 
-    // Tells the player to fire its current weapon
     public void fire() {
-        simulateFireServerRpc();
-        performFire();
+        var projectile = performFire();
+        simulateFireServerRpc(projectile.id);
     }
 
-    private int bulletCount = 0;
+    private Projectile performFire() {
+        var projectile = ProjectileManager.INSTANCE.releaseProjectileFromPool(activeWeaponEnum.Value);
 
-    private void performFire() {
-        Debug.Log($"{GetType().logName()}: Fire! {bulletCount++}");
-
-        if (activeWeapon == null) return;
-
-        var projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor.position,
-            activeWeapon.projectileAnchor.rotation);
-        ProjectileManager.INSTANCE.mange(projectile);
-
-        var projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.isKinematic = false;
-        projectileRb.useGravity = true;
-        projectileRb.AddForce(projectile.transform.forward * 500);
-
+        projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
         projectile.activateOwner();
+
+        return projectile;
     }
 
     [ServerRpc]
-    private void simulateFireServerRpc() {
-        simulateFireClientRpc();
+    private void simulateFireServerRpc(int projectileId) {
+        simulateFireClientRpc(projectileId);
     }
 
     [ClientRpc]
-    private void simulateFireClientRpc() {
+    private void simulateFireClientRpc(int projectileId) {
         if (IsOwner) return;
 
-        Debug.Log($"{GetType().logName()}: Fire! {bulletCount++}");
+        var projectile = ProjectileManager.INSTANCE.releaseFromPool(projectileId);
 
-        if (activeWeapon == null) return;
-
-        var projectile = Instantiate(activeWeapon.projectilePrefab, activeWeapon.projectileAnchor.position,
-            activeWeapon.projectileAnchor.rotation);
-        ProjectileManager.INSTANCE.mange(projectile);
-
-        var projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.isKinematic = false;
-        projectileRb.useGravity = true;
-        projectileRb.AddForce(projectile.transform.forward * 500);
+        projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
 
         projectile.activateDummy();
     }

@@ -15070,6 +15070,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e919d66c9f47ea995cdc8f5247ebb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolSizePerType: 10
+  bulletPrefab: {fileID: 6483094454659299611, guid: 8eba6c9ab3540b247b4100d1c023fe9d, type: 3}
+  clusterPartPrefab: {fileID: 2637464847401419695, guid: 6fa1bba45d501f348b67f7ee2e9f2b3b, type: 3}
+  grenadePrefab: {fileID: 1951976267978780147, guid: 1ef7cae8c738c8a4da80c528474d9e61, type: 3}
+  rocketPrefab: {fileID: 4116445325633841098, guid: 5ee9419e7bb9f6c4bb27882fca57fbd2, type: 3}
 --- !u!4 &2038035009
 Transform:
   m_ObjectHideFlags: 0

@@ -119,6 +119,18 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 403600657
       objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: force
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: useGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: selfDestructTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 454671970074917177, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -208,3 +220,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f2b8e5d40b3d4486c43048181e041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayAfterActivation: 0.2

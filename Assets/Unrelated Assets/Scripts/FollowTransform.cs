@@ -9,4 +9,8 @@ public class FollowTransform : MonoBehaviour {
             transform.rotation = followTarget.rotation;
         }
     }
+
+    public void reset() {
+        followTarget = null;
+    }
 }
