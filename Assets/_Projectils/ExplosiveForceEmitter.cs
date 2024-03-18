@@ -8,12 +8,18 @@ public class ExplosiveForceEmitter : MonoBehaviour {
     public float explosionRadius = 5f;
     public float explosionForce = 10f;
     public float upwardsModifier = 5f;
-    
-    public void blowUp() {
+
+    public void performBlowUp() {
         if (applyForces) {
             ApplyForces();
         }
 
+        if (spawnExplosion) {
+            ExplosionManager.INSTANCE.spawnExplosion(transform.position);
+        }
+    }
+
+    public void simulateBlowUp() {
         if (spawnExplosion) {
             ExplosionManager.INSTANCE.spawnExplosion(transform.position);
         }

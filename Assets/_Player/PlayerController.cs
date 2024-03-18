@@ -114,14 +114,14 @@ public class PlayerController : NetworkBehaviour {
     }
 
     public void equip(WeaponType weaponType, bool checkCurrentTurn = true) {
-        if (checkCurrentTurn && !TurnManager.INSTANCE.isLocalPlayersTurn()) return;
+        if (checkCurrentTurn && TurnManager.IsInactivePlayer()) return;
 
         playerWeaponController.equip(weaponType);
         WeaponUiController.INSTANCE.updateCurrentWeapon(weaponType);
     }
 
     public void fire() {
-        if (!TurnManager.INSTANCE.isLocalPlayersTurn()) return;
+        if (TurnManager.IsInactivePlayer()) return;
 
         playerWeaponController.fire();
     }
