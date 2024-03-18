@@ -19,7 +19,7 @@ public class ProjectilePool : MonoBehaviour {
 
     private int idSequence = 0;
 
-    private void Start() {
+    private void Awake() {
         INSTANCE = this;
 
         initializeProjectilePool(ProjectileType.BULLET, bulletPrefab);

@@ -1,16 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class FollowTargetsCameraManager : MonoBehaviour {
-    public static FollowTargetsCameraManager INSTANCE;
-
-    public List<Transform> targets;
-
-    private void Awake() {
-        INSTANCE = this;
-    }
+    public static List<Transform> targets = new();
 
     void Update() {
         if (targets.Count == 0)
