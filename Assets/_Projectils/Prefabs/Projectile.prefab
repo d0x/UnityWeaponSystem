@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3414110424231283737}
   - component: {fileID: 5532726991153006341}
   - component: {fileID: 4040292371701289265}
+  - component: {fileID: 8738645440226448121}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -86,7 +87,7 @@ MonoBehaviour:
   clusterPartSpawner: {fileID: 0}
   explodeOnCollision: {fileID: 0}
   followTransform: {fileID: 0}
-  selfDestructTime: 3
+  selfDestructTimer: {fileID: 0}
   useGravity: 1
   force: 500
   id: 0
@@ -172,3 +173,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 0}
+--- !u!114 &8738645440226448121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c4cbb472caf408b894c8181f24ceea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfDestructTime: 3
