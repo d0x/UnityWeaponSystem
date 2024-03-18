@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -45,7 +46,15 @@ public class TurnManager : NetworkBehaviour {
         }
     }
 
-    public bool isLocalPlayersTurn() {
+    public static Boolean IsActivePlayer() {
+        return INSTANCE != null && INSTANCE.isActivePlayerPlayer();
+    }
+
+    public static Boolean IsInactivePlayer() {
+        return !IsActivePlayer();
+    }
+
+    private bool isActivePlayerPlayer() {
         return NetworkManager.Singleton.IsConnectedClient && turn.Value == NetworkManager.LocalClientId;
     }
 }

@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour {
     }
 
     public void performActivation() {
-        Debug.Log($"{GetType().logName()}: Activate Projectile - {gameObject.name}");
+        Debug.Log($"{GetType().logName()}: Activate {gameObject.name}");
 
         if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;
         explodeOnCollision.activate();
@@ -47,10 +47,8 @@ public class Projectile : MonoBehaviour {
     }
 
     public void simulateActivation() {
-        Debug.Log($"{GetType().logName()}: Simulate Projectile - {gameObject.name}");
-
-        if (explosiveForceEmitter != null) explosiveForceEmitter.enabled = false;
-        if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;
+        Debug.Log($"{GetType().logName()}: Simulate {gameObject.name}");
+        // there is nothing to be done here.
     }
 
     private void activateExplosionTimer() {
