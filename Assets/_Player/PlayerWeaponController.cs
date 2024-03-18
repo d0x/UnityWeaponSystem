@@ -77,7 +77,7 @@ public class PlayerWeaponController : NetworkBehaviour {
             projectileId = projectile.id;
         }
 
-        return new WeaponInfo() {
+        return new WeaponInfo {
             type = weaponType,
             projectileId = projectileId
         };
@@ -102,11 +102,14 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     public void fire() {
-        var projectile = performFire();
-        simulateFireServerRpc(projectile.id);
+        var position = activeWeapon.transform.position;
+        var rotation = activeWeapon.transform.rotation;
+        
+        var projectile = performFire(position, rotation);
+        simulateFireServerRpc(projectile.id, position, rotation);
     }
-
-    private Projectile performFire() {
+    
+    private Projectile performFire(Vector3 position, Quaternion rotation) {
         var projectile = activeProjectile;
         activeProjectile = null;
 
@@ -114,26 +117,26 @@ public class PlayerWeaponController : NetworkBehaviour {
             projectile = ProjectilePool.INSTANCE.release(activeWeaponInfo.Value.type);
         }
 
-        projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
-        projectile.activateOwner();
+        projectile.fly(position, rotation);
+        projectile.performActivation();
 
         return projectile;
     }
 
     [ServerRpc]
-    private void simulateFireServerRpc(int projectileId) {
-        simulateFireClientRpc(projectileId);
+    private void simulateFireServerRpc(int projectileId, Vector3 position, Quaternion rotation) {
+        simulateFireClientRpc(projectileId, position, rotation);
     }
 
     [ClientRpc]
-    private void simulateFireClientRpc(int projectileId) {
+    private void simulateFireClientRpc(int projectileId, Vector3 position, Quaternion rotation) {
         if (IsOwner) return;
-        
+
         activeProjectile = null;
         var projectile = ProjectilePool.INSTANCE.release(projectileId);
 
-        projectile.fly(activeWeapon.projectileAnchor.position, activeWeapon.projectileAnchor.rotation);
+        projectile.fly(position, rotation);
 
-        projectile.activateDummy();
+        projectile.simulateActivation();
     }
 }

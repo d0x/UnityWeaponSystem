@@ -38,16 +38,16 @@ public class Projectile : MonoBehaviour {
         ProjectileManager.INSTANCE.blowUp(this);
     }
 
-    public void activateOwner() {
-        Debug.Log($"{GetType().logName()}: Activate Real Projectile - {gameObject.name}");
+    public void performActivation() {
+        Debug.Log($"{GetType().logName()}: Activate Projectile - {gameObject.name}");
 
         if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;
         explodeOnCollision.activate();
         activateExplosionTimer();
     }
 
-    public void activateDummy() {
-        Debug.Log($"{GetType().logName()}: Activate Dummy Projectile - {gameObject.name}");
+    public void simulateActivation() {
+        Debug.Log($"{GetType().logName()}: Simulate Projectile - {gameObject.name}");
 
         if (explosiveForceEmitter != null) explosiveForceEmitter.enabled = false;
         if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;

@@ -1,4 +1,5 @@
 ﻿using Unity.Netcode;
+using UnityEngine;
 
 public enum ProjectileType {
     BULLET,
@@ -16,27 +17,23 @@ public class ProjectileManager : NetworkBehaviour {
 
     public void blowUp(Projectile projectile) {
         performBlowUp(projectile);
-        simulateBlowUpServerRpc(projectile.id);
+        simulateBlowUpServerRpc(projectile.id, projectile.transform.position);
     }
 
     private void performBlowUp(Projectile projectile) {
-        var explosiveForceEmitter = projectile.GetComponent<ExplosiveForceEmitter>();
-        explosiveForceEmitter.blowUp();
+        projectile.explosiveForceEmitter.blowUp();
         ProjectilePool.INSTANCE.returnToPool(projectile);
     }
 
     [ServerRpc]
-    private void simulateBlowUpServerRpc(int projectileId) {
-        simulateBlowUpClientRpc(projectileId);
+    private void simulateBlowUpServerRpc(int projectileId, Vector3 position) {
+        simulateBlowUpClientRpc(projectileId, position);
     }
 
     [ClientRpc]
-    private void simulateBlowUpClientRpc(int projectileId) {
-        if (TurnManager.INSTANCE.isLocalPlayersTurn()) return;
-
-        var projectile = ProjectilePool.INSTANCE.get(projectileId);
-
-        ExplosionManager.INSTANCE.spawnExplosion(projectile.transform.position);
-        ProjectilePool.INSTANCE.returnToPool(projectile);
+    private void simulateBlowUpClientRpc(int projectileId, Vector3 position) {
+        if (IsOwner) return;
+        ExplosionManager.INSTANCE.spawnExplosion(position);
+        ProjectilePool.INSTANCE.returnToPool(projectileId);
     }
 }
