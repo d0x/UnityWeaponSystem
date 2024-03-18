@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,9 +15,12 @@ public class WarningUiController : NetworkBehaviour {
     void Update() {
         if (!NetworkManager.Singleton.IsConnectedClient) return;
 
-        var otherPlayersTurn = TurnManager.INSTANCE.turn.Value != NetworkManager.Singleton.LocalClientId;
+        if (TurnManager.IsActivePlayer() && isVisible) {
+            hideWarning();
+            return;
+        }
 
-        if (Input.anyKey && otherPlayersTurn) {
+        if (Input.anyKey && TurnManager.IsInactivePlayer()) {
             showWarning();
         }
     }
@@ -27,7 +28,6 @@ public class WarningUiController : NetworkBehaviour {
     public void showWarning() {
         warning.SetActive(true);
         if (isVisible) return;
-
 
         StartCoroutine(WarningScaleAnimation(2.0f));
     }
@@ -40,8 +40,7 @@ public class WarningUiController : NetworkBehaviour {
             yield return StartCoroutine(ScaleOverTime(warning, originalScale, time / 6));
         }
 
-        isVisible = false;
-        warning.SetActive(false);
+        hideWarning();
     }
 
     IEnumerator ScaleOverTime(GameObject targetObj, Vector3 targetScale, float duration) {
@@ -55,5 +54,10 @@ public class WarningUiController : NetworkBehaviour {
         }
 
         targetObj.transform.localScale = targetScale;
+    }
+
+    private void hideWarning() {
+        isVisible = false;
+        warning.SetActive(false);
     }
 }
