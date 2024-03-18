@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 public class ProjectilePool : MonoBehaviour {
@@ -52,6 +51,10 @@ public class ProjectilePool : MonoBehaviour {
     }
 
     private Projectile release(Projectile projectile) {
+        if (projectile.gameObject.activeSelf) {
+            Debug.LogWarning($"{GetType().logName()}: release got called on an already active object. Id: {projectile.id} - Name: {projectile.gameObject.name}");
+        }
+
         projectile.transform.parent = null;
         projectile.gameObject.SetActive(true);
         return projectile;
