@@ -8,25 +8,15 @@ public enum ProjectileType {
     ROCKET
 }
 
-public class ProjectileManager : NetworkBehaviour {
-    public static ProjectileManager INSTANCE;
+public class ProjectileSimulator : NetworkBehaviour {
+    public static ProjectileSimulator INSTANCE;
 
     private void Start() {
         INSTANCE = this;
     }
 
-    public void blowUp(Projectile projectile) {
-        performBlowUp(projectile);
-        simulateBlowUpServerRpc(projectile.id, projectile.transform.position);
-    }
-
-    private void performBlowUp(Projectile projectile) {
-        projectile.explosiveForceEmitter.performBlowUp();
-        ProjectilePool.INSTANCE.returnToPool(projectile);
-    }
-
     [ServerRpc]
-    private void simulateBlowUpServerRpc(int projectileId, Vector3 position) {
+    public void simulateBlowUpServerRpc(int projectileId, Vector3 position) {
         simulateBlowUpClientRpc(projectileId, position);
     }
 

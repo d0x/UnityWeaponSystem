@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClusterPart
       objectReference: {fileID: 0}
+    - target: {fileID: 8738645440226448121, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: selfDestructTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -203,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f2b8e5d40b3d4486c43048181e041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayAfterActivation: 0.2
 --- !u!4 &7495886689621777176 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4055277254861445102, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}

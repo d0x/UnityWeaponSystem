@@ -6,8 +6,8 @@ public class Projectile : MonoBehaviour {
     public ClusterPartSpawner clusterPartSpawner;
     public ExplodeOnCollision explodeOnCollision;
     public FollowTransform followTransform;
-
-    [SerializeField] private float selfDestructTime;
+    public SelfDestructTimer selfDestructTimer;
+    
     [SerializeField] private bool useGravity;
     [SerializeField] private float force;
 
@@ -15,27 +15,20 @@ public class Projectile : MonoBehaviour {
     public int id;
 
     private Rigidbody rb;
-
-    private float activationTime;
-    private bool isBlowUpActive;
-
+    
     private void Awake() {
         explosiveForceEmitter = GetComponent<ExplosiveForceEmitter>();
         clusterPartSpawner = GetComponent<ClusterPartSpawner>();
         explodeOnCollision = GetComponent<ExplodeOnCollision>();
         followTransform = GetComponent<FollowTransform>();
+        selfDestructTimer = GetComponent<SelfDestructTimer>();
         rb = GetComponent<Rigidbody>();
     }
-
-    private void Update() {
-        if (isBlowUpActive && Time.time >= activationTime) {
-            blowUp();
-        }
-    }
-
+    
     public void blowUp() {
-        isBlowUpActive = false;
-        ProjectileManager.INSTANCE.blowUp(this);
+        explosiveForceEmitter.performBlowUp();
+        ProjectileSimulator.INSTANCE.simulateBlowUpServerRpc(id, transform.position);
+        ProjectilePool.INSTANCE.returnToPool(this);
     }
 
     public void performActivation() {
@@ -43,7 +36,7 @@ public class Projectile : MonoBehaviour {
 
         if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;
         explodeOnCollision.activate();
-        activateExplosionTimer();
+        selfDestructTimer.activate();
     }
 
     public void simulateActivation() {
@@ -51,13 +44,8 @@ public class Projectile : MonoBehaviour {
         // there is nothing to be done here.
     }
 
-    private void activateExplosionTimer() {
-        isBlowUpActive = true;
-        activationTime = Time.time + selfDestructTime;
-    }
-
     public void reset() {
-        isBlowUpActive = false;
+        selfDestructTimer.reset();
         explodeOnCollision.reset();
         followTransform.reset();
         rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
