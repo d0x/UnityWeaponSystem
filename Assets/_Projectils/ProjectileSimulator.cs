@@ -31,4 +31,21 @@ public class ProjectileSimulator : NetworkBehaviour {
 
         ProjectilePool.INSTANCE.returnToPool(projectile);
     }
+
+    [ServerRpc]
+    public void simulateSpawnClustersServerRpc(ClusterPartInfo[] clusterPartInfos) {
+        simulateSpawnClustersClientRpc(clusterPartInfos);
+    }
+    
+    [ClientRpc]
+    private void simulateSpawnClustersClientRpc(ClusterPartInfo[] clusterPartInfos) {
+        if (IsOwner) return;
+
+        foreach (var clusterPartInfo in clusterPartInfos) {
+            var clusterPart = ProjectilePool.INSTANCE.release(clusterPartInfo.id);
+            clusterPart.transform.position = clusterPartInfo.position;
+            clusterPart.GetComponent<Rigidbody>().velocity = clusterPartInfo.force;
+            clusterPart.simulateActivation();
+        }
+    }
 }

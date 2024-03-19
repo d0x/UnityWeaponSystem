@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class ExplodeOnCollision : MonoBehaviour {
-    private static readonly float NEVER = float.MaxValue;
+    private static readonly float NEVER = 999999.0f;
 
     [Tooltip("Delay after activation to prevent immediate explosion. Helps in scenarios like cluster grenades.")]
     [SerializeField]

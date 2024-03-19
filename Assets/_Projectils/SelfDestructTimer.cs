@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class SelfDestructTimer : MonoBehaviour {
-    private static readonly float NEVER = float.MaxValue;
+    private static readonly float NEVER = 999999.0f;
 
     [SerializeField] private float selfDestructTime = NEVER;
 

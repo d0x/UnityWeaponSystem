@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour {
     public ExplodeOnCollision explodeOnCollision;
     public FollowTransform followTransform;
     public SelfDestructTimer selfDestructTimer;
-    
+
     [SerializeField] private bool useGravity;
     [SerializeField] private float force;
 
@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour {
     public int id;
 
     private Rigidbody rb;
-    
+
     private void Awake() {
         explosiveForceEmitter = GetComponent<ExplosiveForceEmitter>();
         clusterPartSpawner = GetComponent<ClusterPartSpawner>();
@@ -24,17 +24,16 @@ public class Projectile : MonoBehaviour {
         selfDestructTimer = GetComponent<SelfDestructTimer>();
         rb = GetComponent<Rigidbody>();
     }
-    
+
     public void blowUp() {
         explosiveForceEmitter.performBlowUp();
+        if(clusterPartSpawner != null) clusterPartSpawner.spawnClusters(transform.position);
         ProjectileSimulator.INSTANCE.simulateBlowUpServerRpc(id, transform.position);
         ProjectilePool.INSTANCE.returnToPool(this);
     }
 
     public void performActivation() {
         Debug.Log($"{GetType().logName()}: Activate {gameObject.name}");
-
-        if (clusterPartSpawner != null) clusterPartSpawner.enabled = false;
         explodeOnCollision.activate();
         selfDestructTimer.activate();
     }

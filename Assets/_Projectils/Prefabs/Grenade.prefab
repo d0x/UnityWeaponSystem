@@ -212,6 +212,10 @@ PrefabInstance:
       propertyPath: selfDestructTime
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: -802863004957683879, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: clusterPartSpawner
+      value: 
+      objectReference: {fileID: 6977700700075688547}
     - target: {fileID: 454671970074917177, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -347,7 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c343f009e926a8945891fdbc37eb5e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clusterPartPrefab: {fileID: 2637464847401419695, guid: 6fa1bba45d501f348b67f7ee2e9f2b3b, type: 3}
   clusterCount: 5
 --- !u!4 &6307930534174733636 stripped
 Transform:
