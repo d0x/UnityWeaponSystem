@@ -23,8 +23,15 @@ public class ExplodeOnCollision : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
+        handleCollision(collision);
+    }
+
+    void OnCollisionStay(Collision collision) {
+        handleCollision(collision);
+    }
+
+    void handleCollision(Collision collision) {
         if (enabled && collision.gameObject.name != gameObject.name && Time.time >= destroyAfterTime) {
-            reset();
             projectile.blowUp();
         }
     }

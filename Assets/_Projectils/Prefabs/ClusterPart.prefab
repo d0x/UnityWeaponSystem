@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622482031491240189, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5772374168787587773, guid: 6dc05faf2a37e0b4a97e8019fa4dbe98, type: 3}
       propertyPath: m_Name
       value: ClusterPart
