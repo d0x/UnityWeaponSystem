@@ -83,11 +83,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  explosiveForceEmitter: {fileID: 0}
+  explosiveForceEmitter: {fileID: 6688043545210583349}
   clusterPartSpawner: {fileID: 0}
-  explodeOnCollision: {fileID: 0}
-  followTransform: {fileID: 0}
-  selfDestructTimer: {fileID: 0}
+  explodeOnCollision: {fileID: 5532726991153006341}
+  followTransform: {fileID: 4040292371701289265}
+  selfDestructTimer: {fileID: 8738645440226448121}
   useGravity: 1
   force: 500
   id: 0
