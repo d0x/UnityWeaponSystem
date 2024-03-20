@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public enum ProjectileType {
@@ -11,20 +12,30 @@ public enum ProjectileType {
 public class ProjectileSimulator : NetworkBehaviour {
     public static ProjectileSimulator INSTANCE;
 
-    private void Start() {
+    private Dictionary<ulong, PlayerWeaponController> playerWeaponControllers = new();
+
+    private void Awake() {
         INSTANCE = this;
     }
 
+    public void add(ulong ownerClientId, PlayerWeaponController playerWeaponController) {
+        playerWeaponControllers[ownerClientId] = playerWeaponController;
+    }
+
     [ServerRpc]
-    public void simulateFireServerRpc(int projectileId, Vector3 position, Quaternion rotation) {
-        simulateFireClientRpc(projectileId, position, rotation);
+    public void simulateFireServerRpc(ulong playerId, int projectileId, Vector3 position, Quaternion rotation) {
+        simulateFireClientRpc(playerId, projectileId, position, rotation);
     }
 
     [ClientRpc]
-    private void simulateFireClientRpc(int projectileId, Vector3 position, Quaternion rotation) {
+    private void simulateFireClientRpc(ulong playerId, int projectileId, Vector3 position, Quaternion rotation) {
         if (IsOwner) return;
 
-        var projectile = ProjectilePool.INSTANCE.release(projectileId);
+        var activeProjectile = getActiveProjectile(playerId);
+        var projectileIdMatches = activeProjectile != null && activeProjectile.id == projectileId;
+
+        var projectile = projectileIdMatches ? activeProjectile : ProjectilePool.INSTANCE.release(projectileId);
+
         projectile.fly(position, rotation);
         projectile.simulateActivation();
     }
@@ -62,5 +73,9 @@ public class ProjectileSimulator : NetworkBehaviour {
             clusterPart.fly(clusterPartInfo.position, clusterPartInfo.rotation, clusterPartInfo.force);
             clusterPart.simulateActivation();
         }
+    }
+
+    private Projectile getActiveProjectile(ulong playerId) {
+        return playerWeaponControllers[playerId].activeProjectile;
     }
 }

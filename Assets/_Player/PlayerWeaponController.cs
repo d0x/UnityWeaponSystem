@@ -26,7 +26,7 @@ public class PlayerWeaponController : NetworkBehaviour {
     );
 
     private Weapon activeWeapon;
-    private Projectile activeProjectile;
+    public Projectile activeProjectile;
 
     private void Awake() {
         none.gameObject.SetActive(true);
@@ -38,6 +38,7 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     public override void OnNetworkSpawn() {
+        ProjectileSimulator.INSTANCE.add(NetworkObject.OwnerClientId, this);
         simulateSwitchWeapon(WEAPON_NONE, activeWeaponInfo.Value);
     }
 
@@ -109,7 +110,7 @@ public class PlayerWeaponController : NetworkBehaviour {
         var rotation = activeWeapon.transform.rotation;
 
         var projectile = performFire(position, rotation);
-        ProjectileSimulator.INSTANCE.simulateFireServerRpc(projectile.id, position, rotation);
+        ProjectileSimulator.INSTANCE.simulateFireServerRpc( NetworkManager.LocalClientId, projectile.id, position, rotation);
     }
 
     private Projectile performFire(Vector3 position, Quaternion rotation) {
