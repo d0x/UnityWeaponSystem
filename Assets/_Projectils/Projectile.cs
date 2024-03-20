@@ -27,8 +27,8 @@ public class Projectile : MonoBehaviour {
 
     public void blowUp() {
         explosiveForceEmitter.performBlowUp();
-        if(clusterPartSpawner != null) clusterPartSpawner.spawnClusters(transform.position);
-        ProjectileSimulator.INSTANCE.simulateBlowUpServerRpc(id, transform.position);
+        if (clusterPartSpawner != null) clusterPartSpawner.spawnClusters(transform.position);
+        ProjectileSimulator.INSTANCE.blowUpServerRpc(id, transform.position);
         ProjectilePool.INSTANCE.returnToPool(this);
     }
 
@@ -52,14 +52,20 @@ public class Projectile : MonoBehaviour {
         rb.useGravity = false;
     }
 
-    public void fly(Vector3 position, Quaternion rotation) {
+    public void fly(Vector3 position, Quaternion rotation, Vector3 finalVelocity = default) {
         followTransform.followTarget = null;
+        
         transform.position = position;
         transform.rotation = rotation;
 
         rb.isKinematic = false;
         rb.useGravity = useGravity;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.AddForce(transform.forward * force);
+
+        if (finalVelocity == default) {
+            rb.AddForce(transform.forward * force);
+        }
+        else {
+            rb.velocity = finalVelocity;
+        }
     }
 }

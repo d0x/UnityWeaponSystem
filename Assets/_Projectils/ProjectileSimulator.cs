@@ -16,35 +16,36 @@ public class ProjectileSimulator : NetworkBehaviour {
     }
 
     [ServerRpc]
-    public void simulateBlowUpServerRpc(int projectileId, Vector3 position) {
-        simulateBlowUpClientRpc(projectileId, position);
+    public void blowUpServerRpc(int projectileId, Vector3 position) {
+        blowUpClientRpc(projectileId, position);
     }
 
     [ClientRpc]
-    private void simulateBlowUpClientRpc(int projectileId, Vector3 position) {
+    private void blowUpClientRpc(int projectileId, Vector3 position) {
         if (IsOwner) return;
 
         var projectile = ProjectilePool.INSTANCE.get(projectileId);
 
+        // correct position in case the local simulation was off
         projectile.transform.position = position;
+
         projectile.explosiveForceEmitter.simulateBlowUp();
 
         ProjectilePool.INSTANCE.returnToPool(projectile);
     }
 
     [ServerRpc]
-    public void simulateSpawnClustersServerRpc(ClusterPartInfo[] clusterPartInfos) {
-        simulateSpawnClustersClientRpc(clusterPartInfos);
+    public void spawnClustersServerRpc(ClusterPartInfo[] clusterPartInfos) {
+        spawnClustersClientRpc(clusterPartInfos);
     }
-    
+
     [ClientRpc]
-    private void simulateSpawnClustersClientRpc(ClusterPartInfo[] clusterPartInfos) {
+    private void spawnClustersClientRpc(ClusterPartInfo[] clusterPartInfos) {
         if (IsOwner) return;
 
         foreach (var clusterPartInfo in clusterPartInfos) {
             var clusterPart = ProjectilePool.INSTANCE.release(clusterPartInfo.id);
-            clusterPart.transform.position = clusterPartInfo.position;
-            clusterPart.GetComponent<Rigidbody>().velocity = clusterPartInfo.force;
+            clusterPart.fly(clusterPartInfo.position, clusterPartInfo.rotation, clusterPartInfo.force);
             clusterPart.simulateActivation();
         }
     }
