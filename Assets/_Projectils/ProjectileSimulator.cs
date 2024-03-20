@@ -16,12 +16,26 @@ public class ProjectileSimulator : NetworkBehaviour {
     }
 
     [ServerRpc]
-    public void blowUpServerRpc(int projectileId, Vector3 position) {
-        blowUpClientRpc(projectileId, position);
+    public void simulateFireServerRpc(int projectileId, Vector3 position, Quaternion rotation) {
+        simulateFireClientRpc(projectileId, position, rotation);
     }
 
     [ClientRpc]
-    private void blowUpClientRpc(int projectileId, Vector3 position) {
+    private void simulateFireClientRpc(int projectileId, Vector3 position, Quaternion rotation) {
+        if (IsOwner) return;
+
+        var projectile = ProjectilePool.INSTANCE.release(projectileId);
+        projectile.fly(position, rotation);
+        projectile.simulateActivation();
+    }
+
+    [ServerRpc]
+    public void simulateBlowUpServerRpc(int projectileId, Vector3 position) {
+        simulateBlowUpClientRpc(projectileId, position);
+    }
+
+    [ClientRpc]
+    private void simulateBlowUpClientRpc(int projectileId, Vector3 position) {
         if (IsOwner) return;
 
         var projectile = ProjectilePool.INSTANCE.get(projectileId);
@@ -35,12 +49,12 @@ public class ProjectileSimulator : NetworkBehaviour {
     }
 
     [ServerRpc]
-    public void spawnClustersServerRpc(ClusterPartInfo[] clusterPartInfos) {
-        spawnClustersClientRpc(clusterPartInfos);
+    public void simulateSpawnClustersServerRpc(ClusterPartInfo[] clusterPartInfos) {
+        simulateSpawnClustersClientRpc(clusterPartInfos);
     }
 
     [ClientRpc]
-    private void spawnClustersClientRpc(ClusterPartInfo[] clusterPartInfos) {
+    private void simulateSpawnClustersClientRpc(ClusterPartInfo[] clusterPartInfos) {
         if (IsOwner) return;
 
         foreach (var clusterPartInfo in clusterPartInfos) {

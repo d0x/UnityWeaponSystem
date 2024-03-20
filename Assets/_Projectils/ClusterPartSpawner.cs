@@ -26,7 +26,7 @@ public class ClusterPartSpawner : MonoBehaviour {
 
     public void spawnClusters(Vector3 transformPosition) {
         var clusterPartInfos = performSpawnClusters(clusterCount, transformPosition, rb.velocity);
-        ProjectileSimulator.INSTANCE.spawnClustersServerRpc(clusterPartInfos);
+        ProjectileSimulator.INSTANCE.simulateSpawnClustersServerRpc(clusterPartInfos);
     }
 
     public ClusterPartInfo[] performSpawnClusters(int numberOfClusters, Vector3 position, Vector3 velocity) {

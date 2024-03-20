@@ -42,6 +42,9 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     private void simulateSwitchWeapon(WeaponInfo previousvalue, WeaponInfo newvalue) {
+        // if (IsOwner) return;
+        // Debug.Log($"{GetType().logName()}: Simulate Equip Weapon {gameObject.name} - {newvalue.type}");
+
         holster(previousvalue);
         activeWeapon = getWeapon(newvalue.type);
         activeWeapon.gameObject.SetActive(true);
@@ -66,15 +69,18 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     private WeaponInfo performEquip(WeaponType weaponType) {
+        // Debug.Log(
+        //     $"{GetType().logName()}: Perform Equip Weapon {gameObject.name} - {weaponType} (current weap) {activeWeaponInfo.Value.type}");
         holster(activeWeaponInfo.Value);
 
         activeWeapon = getWeapon(weaponType);
+        // activeWeapon.gameObject.SetActive(true);
 
         var projectileId = -1;
         if (activeWeapon.spawnProjectile) {
-            var projectile = ProjectilePool.INSTANCE.release(weaponType);
-            projectile.followTransform.followTarget = activeWeapon.projectileAnchor;
-            projectileId = projectile.id;
+            activeProjectile = ProjectilePool.INSTANCE.release(weaponType);
+            activeProjectile.followTransform.followTarget = activeWeapon.projectileAnchor;
+            projectileId = activeProjectile.id;
         }
 
         return new WeaponInfo {
@@ -104,11 +110,11 @@ public class PlayerWeaponController : NetworkBehaviour {
     public void fire() {
         var position = activeWeapon.transform.position;
         var rotation = activeWeapon.transform.rotation;
-        
+
         var projectile = performFire(position, rotation);
-        simulateFireServerRpc(projectile.id, position, rotation);
+        ProjectileSimulator.INSTANCE.simulateFireServerRpc(projectile.id, position, rotation);
     }
-    
+
     private Projectile performFire(Vector3 position, Quaternion rotation) {
         var projectile = activeProjectile;
         activeProjectile = null;
@@ -121,22 +127,5 @@ public class PlayerWeaponController : NetworkBehaviour {
         projectile.performActivation();
 
         return projectile;
-    }
-
-    [ServerRpc]
-    private void simulateFireServerRpc(int projectileId, Vector3 position, Quaternion rotation) {
-        simulateFireClientRpc(projectileId, position, rotation);
-    }
-
-    [ClientRpc]
-    private void simulateFireClientRpc(int projectileId, Vector3 position, Quaternion rotation) {
-        if (IsOwner) return;
-
-        activeProjectile = null;
-        var projectile = ProjectilePool.INSTANCE.release(projectileId);
-
-        projectile.fly(position, rotation);
-
-        projectile.simulateActivation();
     }
 }

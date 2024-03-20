@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour {
     public void blowUp() {
         explosiveForceEmitter.performBlowUp();
         if (clusterPartSpawner != null) clusterPartSpawner.spawnClusters(transform.position);
-        ProjectileSimulator.INSTANCE.blowUpServerRpc(id, transform.position);
+        ProjectileSimulator.INSTANCE.simulateBlowUpServerRpc(id, transform.position);
         ProjectilePool.INSTANCE.returnToPool(this);
     }
 
