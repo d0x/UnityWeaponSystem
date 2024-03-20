@@ -42,10 +42,9 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     private void simulateSwitchWeapon(WeaponInfo previousvalue, WeaponInfo newvalue) {
-        // if (IsOwner) return;
-        // Debug.Log($"{GetType().logName()}: Simulate Equip Weapon {gameObject.name} - {newvalue.type}");
+        if (previousvalue.type != WeaponType.NONE)
+            holster(previousvalue);
 
-        holster(previousvalue);
         activeWeapon = getWeapon(newvalue.type);
         activeWeapon.gameObject.SetActive(true);
 
@@ -53,7 +52,9 @@ public class PlayerWeaponController : NetworkBehaviour {
             activeProjectile = null;
         }
         else {
-            activeProjectile = ProjectilePool.INSTANCE.release(newvalue.projectileId);
+            activeProjectile = IsOwner
+                ? ProjectilePool.INSTANCE.get(newvalue.projectileId)
+                : ProjectilePool.INSTANCE.release(newvalue.projectileId);
             activeProjectile.followTransform.followTarget = activeWeapon.projectileAnchor;
         }
     }
@@ -69,17 +70,13 @@ public class PlayerWeaponController : NetworkBehaviour {
     }
 
     private WeaponInfo performEquip(WeaponType weaponType) {
-        // Debug.Log(
-        //     $"{GetType().logName()}: Perform Equip Weapon {gameObject.name} - {weaponType} (current weap) {activeWeaponInfo.Value.type}");
         holster(activeWeaponInfo.Value);
 
         activeWeapon = getWeapon(weaponType);
-        // activeWeapon.gameObject.SetActive(true);
 
         var projectileId = -1;
         if (activeWeapon.spawnProjectile) {
             activeProjectile = ProjectilePool.INSTANCE.release(weaponType);
-            activeProjectile.followTransform.followTarget = activeWeapon.projectileAnchor;
             projectileId = activeProjectile.id;
         }
 
