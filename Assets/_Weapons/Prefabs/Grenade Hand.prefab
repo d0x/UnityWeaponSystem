@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3055854491540764254, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 526812765
+      objectReference: {fileID: 0}
     - target: {fileID: 1174747016533738587, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.2
@@ -19,6 +23,10 @@ PrefabInstance:
     - target: {fileID: 2433672565246329318, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 747301811
+      objectReference: {fileID: 0}
+    - target: {fileID: 6459213215540159056, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
+      propertyPath: type
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6459213215540159056, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
       propertyPath: spawnProjectile
@@ -70,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9194726038070980758, guid: ebe2320f0e7c44d4d807767b34193803, type: 3}
       propertyPath: m_Name
-      value: Invisible Hand
+      value: Grenade Hand
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

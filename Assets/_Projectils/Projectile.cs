@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour {
+public class Projectile : NetworkBehaviour {
     public ProjectileType type;
     public ExplosiveForceEmitter explosiveForceEmitter;
     public ClusterPartSpawner clusterPartSpawner;

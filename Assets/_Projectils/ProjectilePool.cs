@@ -1,47 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ProjectilePool : MonoBehaviour {
+[Serializable]
+public struct PoolItem {
+    public WeaponType weaponType;
+    public Weapon weaponPrefab;
+    public int count;
+}
+
+[Serializable]
+public struct ProjectilePoolItem {
+    public ProjectileType projectileType;
+    public Projectile projectilePrefab;
+    public int count;
+}
+
+public class ProjectilePool : NetworkBehaviour {
     public static ProjectilePool INSTANCE;
 
-    [SerializeField] private int poolSizePerType;
+    [SerializeField] private PoolItem[] weapons;
+    [SerializeField] private ProjectilePoolItem[] projectiles;
+    
+    private Dictionary<WeaponType, List<Weapon>> weaponPool = new();
+    private Dictionary<ulong, Weapon> weaponById = new();
+    private Dictionary<WeaponType, GameObject> weaponParents = new();
 
-    [SerializeField] private Projectile bulletPrefab;
-    [SerializeField] private Projectile clusterPartPrefab;
-    [SerializeField] private Projectile grenadePrefab;
-    [SerializeField] private Projectile rocketPrefab;
 
     private Dictionary<ProjectileType, List<Projectile>> projectilePool = new();
-    private Dictionary<int, Projectile> projectileById = new();
-
+    private Dictionary<ulong, Projectile> projectileById = new();
     private Dictionary<ProjectileType, GameObject> projectileParents = new();
 
     private int idSequence = 0;
 
     private void Awake() {
         INSTANCE = this;
-
-        initializeProjectilePool(ProjectileType.BULLET, bulletPrefab);
-        initializeProjectilePool(ProjectileType.CLUSTER_PART, clusterPartPrefab);
-        initializeProjectilePool(ProjectileType.GRENADE, grenadePrefab);
-        initializeProjectilePool(ProjectileType.ROCKET, rocketPrefab);
+        
+        foreach (WeaponType weaponType in Enum.GetValues(typeof(WeaponType)))
+        {
+            weaponPool[weaponType] = new List<Weapon>();
+        }
     }
 
-    private void initializeProjectilePool(ProjectileType projectileType, Projectile prefab) {
-        projectilePool[projectileType] = new List<Projectile>(poolSizePerType);
+    public void addToPool(Weapon weapon) {
+        Debug.Log($"{GetType().logName()}: Add {weapon.type} to pool");
+        
+        
+        
+        weaponPool[weapon.type].Add(weapon);
+    }
+    
+    public override void OnNetworkSpawn() {
+        if (!IsServer) return;
 
-        var parentObject = new GameObject($"{projectileType.ToString()} Pool");
-        parentObject.transform.parent = transform;
-        projectileParents[projectileType] = parentObject;
+        foreach (var weapon in weapons) {
+            initializeWeaponPool(weapon.weaponType, weapon.weaponPrefab, weapon.count);
+        }
 
-        for (int i = 0; i < poolSizePerType; i++) {
-            var projectile = Instantiate(prefab, parentObject.transform);
+        foreach (var projectile in projectiles) {
+            initializeProjectilePool(projectile.projectileType, projectile.projectilePrefab, projectile.count);
+        }
+    }
+
+    private void initializeWeaponPool(WeaponType weaponType, Weapon prefab, int count) {
+        weaponPool[weaponType] = new List<Weapon>(count);
+
+        // var parentObject = new GameObject($"{weaponType.ToString()} Pool");
+        // parentObject.transform.parent = transform;
+        // weaponParents[weaponType] = parentObject;
+
+        for (int i = 0; i < count; i++) {
+            var weapon = Instantiate(prefab);
+            var id = idSequence++;
+            weapon.gameObject.name = prefab.name + " (" + id + ")";
+            weapon.NetworkObject.Spawn();
+            weapon.gameObject.SetActive(false);
+
+         //   weaponById[weapon.NetworkObjectId] = weapon;
+        //    weaponPool[weaponType].Add(weapon);
+        }
+    }
+
+    private void initializeProjectilePool(ProjectileType projectileType, Projectile prefab, int count) {
+        projectilePool[projectileType] = new List<Projectile>(count);
+
+        // var parentObject = new GameObject($"{projectileType.ToString()} Pool");
+        // parentObject.transform.parent = transform;
+        // projectileParents[projectileType] = parentObject;
+
+        for (int i = 0; i < count; i++) {
+            var projectile = Instantiate(prefab);
             projectile.id = idSequence++;
-            projectile.gameObject.SetActive(false);
             projectile.gameObject.name = prefab.name + " (" + projectile.id + ")";
+            projectile.NetworkObject.Spawn();
+            projectile.gameObject.SetActive(false);
 
-            projectileById[projectile.id] = projectile;
+            projectileById[projectile.NetworkObjectId] = projectile;
             projectilePool[projectileType].Add(projectile);
         }
     }
@@ -52,7 +107,8 @@ public class ProjectilePool : MonoBehaviour {
 
     private Projectile release(Projectile projectile) {
         if (projectile.gameObject.activeSelf) {
-            Debug.LogWarning($"{GetType().logName()}: release got called on an already active object. Id: {projectile.id} - Name: {projectile.gameObject.name}");
+            Debug.LogWarning(
+                $"{GetType().logName()}: release got called on an already active object. Id: {projectile.id} - Name: {projectile.gameObject.name}");
         }
 
         projectile.transform.parent = null;
@@ -80,6 +136,18 @@ public class ProjectilePool : MonoBehaviour {
         };
     }
 
+
+    public Weapon releaseWeapon(WeaponType weaponType) {
+        for (var i = 0; i < weaponPool[weaponType].Count; i++) {
+            var weapon = weaponPool[weaponType][i];
+            if (weapon.gameObject.activeInHierarchy) continue;
+            weapon.gameObject.SetActive(true);
+            return weapon;
+        }
+
+        throw new InvalidOperationException("No object could be found. It could be that all objects are used.");
+    }
+
     public void returnToPool(Projectile projectile) {
         projectile.reset();
         projectile.transform.parent = projectileParents[projectile.type].transform;
@@ -91,6 +159,7 @@ public class ProjectilePool : MonoBehaviour {
     }
 
     public Projectile get(int projectileId) {
-        return projectileById[projectileId];
+        //return projectileById[projectileId];
+        return null;
     }
 }

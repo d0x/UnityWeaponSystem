@@ -817,6 +817,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 308047611}
+  - component: {fileID: 308047612}
   - component: {fileID: 308047610}
   m_Layer: 0
   m_Name: ProjectilePool
@@ -837,11 +838,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26075ffe0aae449ea4dc50f0d9739c93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolSizePerType: 20
-  bulletPrefab: {fileID: 6483094454659299611, guid: 8eba6c9ab3540b247b4100d1c023fe9d, type: 3}
-  clusterPartPrefab: {fileID: 2637464847401419695, guid: 6fa1bba45d501f348b67f7ee2e9f2b3b, type: 3}
-  grenadePrefab: {fileID: 1951976267978780147, guid: 1ef7cae8c738c8a4da80c528474d9e61, type: 3}
-  rocketPrefab: {fileID: 4116445325633841098, guid: 5ee9419e7bb9f6c4bb27882fca57fbd2, type: 3}
+  weapons:
+  - weaponType: 1
+    weaponPrefab: {fileID: 164847173026641605, guid: d416819fd07115a488774d3eee20c2ea, type: 3}
+    count: 1
+  - weaponType: 2
+    weaponPrefab: {fileID: 8581469157642533432, guid: 5ec574f2733e5b9479e0d1bac8d4b542, type: 3}
+    count: 1
+  - weaponType: 3
+    weaponPrefab: {fileID: 8953485734978531641, guid: 1606ab1b10c835340a2419cfbeeccbbc, type: 3}
+    count: 1
+  projectiles:
+  - projectileType: 0
+    projectilePrefab: {fileID: 6483094454659299611, guid: 8eba6c9ab3540b247b4100d1c023fe9d, type: 3}
+    count: 5
+  - projectileType: 1
+    projectilePrefab: {fileID: 2637464847401419695, guid: 6fa1bba45d501f348b67f7ee2e9f2b3b, type: 3}
+    count: 20
+  - projectileType: 2
+    projectilePrefab: {fileID: 1951976267978780147, guid: 1ef7cae8c738c8a4da80c528474d9e61, type: 3}
+    count: 5
+  - projectileType: 3
+    projectilePrefab: {fileID: 4116445325633841098, guid: 5ee9419e7bb9f6c4bb27882fca57fbd2, type: 3}
+    count: 5
 --- !u!4 &308047611
 Transform:
   m_ObjectHideFlags: 0
@@ -857,6 +876,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &308047612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308047609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1113471509
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &312701784
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 454671970074917177}
+  - component: {fileID: -4910902906679867567}
   - component: {fileID: -802863004957683879}
   - component: {fileID: 622482031491240189}
   - component: {fileID: 6688043545210583349}
@@ -47,6 +48,7 @@ GameObject:
   - component: {fileID: 5532726991153006341}
   - component: {fileID: 4040292371701289265}
   - component: {fileID: 8738645440226448121}
+  - component: {fileID: -72844591579474793}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -70,6 +72,27 @@ Transform:
   - {fileID: 4055277254861445102}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-4910902906679867567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4077975648
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &-802863004957683879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,3 +209,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfDestructTime: 3
+--- !u!114 &-72844591579474793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772374168787587773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75a4b8d03af30ba4d993b0a61c1fcc69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

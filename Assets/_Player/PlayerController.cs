@@ -44,7 +44,7 @@ public class PlayerController : NetworkBehaviour {
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
 
-        equip(defaultWeapon, false);
+        //equip(defaultWeapon, false);
     }
 
     private void rotateWeaponAnchor() {

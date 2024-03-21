@@ -1,6 +1,7 @@
 ﻿using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public struct WeaponInfo : INetworkSerializable {
     public WeaponType type;
@@ -15,11 +16,6 @@ public struct WeaponInfo : INetworkSerializable {
 public class PlayerWeaponController : NetworkBehaviour {
     public static readonly WeaponInfo WEAPON_NONE = new() { type = WeaponType.NONE, projectileId = -1 };
 
-    [SerializeField] private Weapon none;
-    [SerializeField] private Weapon bazooka;
-    [SerializeField] private Weapon grenade;
-    [SerializeField] private Weapon rifle;
-
     private NetworkVariable<WeaponInfo> activeWeaponInfo = new(
         writePerm: NetworkVariableWritePermission.Owner,
         value: WEAPON_NONE
@@ -29,17 +25,12 @@ public class PlayerWeaponController : NetworkBehaviour {
     public Projectile activeProjectile;
 
     private void Awake() {
-        none.gameObject.SetActive(true);
-        bazooka.gameObject.SetActive(false);
-        grenade.gameObject.SetActive(false);
-        rifle.gameObject.SetActive(false);
-
-        activeWeaponInfo.OnValueChanged += simulateSwitchWeapon;
+        //activeWeaponInfo.OnValueChanged+= simulateSwitchWeapon;
     }
 
     public override void OnNetworkSpawn() {
         ProjectileSimulator.INSTANCE.add(NetworkObject.OwnerClientId, this);
-        simulateSwitchWeapon(WEAPON_NONE, activeWeaponInfo.Value);
+       // simulateSwitchWeapon(WEAPON_NONE, activeWeaponInfo.Value);
     }
 
     private void simulateSwitchWeapon(WeaponInfo previousvalue, WeaponInfo newvalue) {
@@ -66,8 +57,12 @@ public class PlayerWeaponController : NetworkBehaviour {
             return;
         }
 
-        var weaponInfo = performEquip(weapon);
-        activeWeaponInfo.Value = weaponInfo;
+        var weaponInstance = ProjectilePool.INSTANCE.releaseWeapon(weapon);
+        weaponInstance.gameObject.SetActive(true);
+        weaponInstance.followTransform.setFollowTarget(NetworkObject);
+
+        // var weaponInfo = performEquip(weapon);
+        // activeWeaponInfo.Value = weaponInfo;
     }
 
     private WeaponInfo performEquip(WeaponType weaponType) {
@@ -86,23 +81,24 @@ public class PlayerWeaponController : NetworkBehaviour {
             projectileId = projectileId
         };
     }
-
+    
     private Weapon getWeapon(WeaponType weaponType) {
-        return weaponType switch {
-            WeaponType.NONE => none,
-            WeaponType.BAZOOKA => bazooka,
-            WeaponType.GRENADE => grenade,
-            WeaponType.RIFLE => rifle,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        return null;
+        // return weaponType switch {
+        //     WeaponType.NONE => none,
+        //     WeaponType.BAZOOKA => bazookaPrefab,
+        //     WeaponType.GRENADE => grenadePrefab,
+        //     WeaponType.RIFLE => riflePrefab,
+        //     _ => throw new ArgumentOutOfRangeException()
+        // };
     }
 
     private void holster(WeaponInfo weaponInfo) {
-        getWeapon(weaponInfo.type).gameObject.SetActive(false);
-        var projectileId = weaponInfo.projectileId;
-        if (projectileId != -1) {
-            ProjectilePool.INSTANCE.returnToPool(projectileId);
-        }
+        // getWeapon(weaponInfo.type).gameObject.SetActive(false);
+        // var projectileId = weaponInfo.projectileId;
+        // if (projectileId != -1) {
+        //     ProjectilePool.INSTANCE.returnToPool(projectileId);
+        // }
     }
 
     public void fire() {

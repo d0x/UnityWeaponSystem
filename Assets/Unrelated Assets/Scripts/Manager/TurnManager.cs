@@ -34,7 +34,7 @@ public class TurnManager : NetworkBehaviour {
     private void transferOwnership(ulong activeClientId) {
         if (!IsServer) return;
 
-        FindObjectsByType<NetworkObject>(FindObjectsSortMode.None)
+        FindObjectsByType<NetworkObject>(FindObjectsInactive.Include, FindObjectsSortMode.None)
             .Where(n => n.IsSpawned)
             .ToList()
             .ForEach(o => o.ChangeOwnership(activeClientId));
